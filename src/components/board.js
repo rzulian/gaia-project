@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 //import { HexGrid } from './hex';
 import  Token  from './token';
 
-import './board.css';
+//import './board.css';
 
 class Board extends React.Component {
   static propTypes = {

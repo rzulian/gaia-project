@@ -1,4 +1,6 @@
-class Faction {
+import { buildType } from '../constants';
+
+export  default class Faction {
   constructor(
     name,
     color,
@@ -21,16 +23,39 @@ class Faction {
       income: { ore: [1, 2, 3, 3, 4, 5, 6, 7, 8] },
       mines: 8
     };
+    this.navigation_range = 1;
+    this.navigation_boost = 0;
+    this.terraforming_cost = 3;
+    this.terraforming_step_free = 0;
+    
   }
 
-  burn(num_power) {
-    if (this.power.power1 > 0) {
-      throw 'StillPowerInArea1';
-    } else if (this.power.power2 >= num_power * 2) {
+  // Power actions
+
+  discard_free_action(num_power) {
+    if (this.power.power2 >= num_power * 2) {
       this.power.power2 -= num_power * 2;
       this.power.power3 += num_power;
     } else {
-      throw 'NotEnoughPowerToBurn';
+      throw 'NotEnoughPowerToDiscard';
+    }
+  }
+
+  gain(num_power) {
+    this.power.power1 += num_power;
+  }
+
+  discard(num_power1, num_power2, num_power3) {
+    if (
+      this.power.power1 >= num_power1 &&
+      this.power.power2 >= num_power2 &&
+      this.power.power3 >= num_power3
+    ) {
+      this.power.power1 -= num_power1;
+      this.power.power2 -= num_power2;
+      this.power.power3 -= num_power3;
+    } else {
+      throw 'NotEnoughPowerToDiscard';
     }
   }
 
@@ -48,6 +73,22 @@ class Faction {
     return num_power - max_power; //to decrease victory points¯
   }
 
+  spend(num_power) {
+    if (this.power.power3 >= num_power) {
+      this.power.power3 -= num_power;
+      this.power.power1 += num_power;
+    } else {
+      throw 'NotEnoughPowerToSpend';
+    }
+  }
+
+  //buildings
+
+  placeFirstStructure() {
+    --this.mines.mines;
+    return buildType.MINE;
+  }
+
   buildMine() {
     let canSpend =
       this.credits >= this.mines.cost.credits &&
@@ -63,7 +104,7 @@ class Faction {
     }
   }
 }
-export default Faction;
+
 
 /* Readonly our $hadschhallas => { 
     C => 15, W => 4, K => 3, Q => 1, P1 => 2, P2 => 4,

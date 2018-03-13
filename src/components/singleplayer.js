@@ -1,5 +1,5 @@
 import React from 'react';
-import { Client } from 'boardgame.io/client';
+import { Client } from 'boardgame.io/react';
 import GaiaProjectGame from '../game/game';
 import GaiaProjectBoard from './board';
 
